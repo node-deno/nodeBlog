@@ -19,8 +19,20 @@ const newBlog = (blogData = {}) => {
     }
 }
 
+const updateBlog = (blogData = {}) => {
+    console.log('updateBlog blogData', blogData)
+    return true
+}
+
+const deleteBlog = (id) => {
+//    id就是要删除博客的id
+    return true
+}
+
 module.exports = {
     getList,
     getDetail,
-    newBlog
+    newBlog,
+    updateBlog,
+    deleteBlog
 }
