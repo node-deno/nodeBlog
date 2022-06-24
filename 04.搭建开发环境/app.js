@@ -6,7 +6,7 @@ const handleUserRouter = require('./src/router/user')
 const handleBlogrRouter = require('./src/router/blog')
 
 
-//处理postData
+//处理postData---由于postData是以stream的方式传递过来的，也就是接收postData是异步接收的
 const getPostData = (req) => {
     const promise = new Promise(((resolve, reject) => {
         //不是POST请求
@@ -51,12 +51,23 @@ const serverHandle = (req, res) => {
     getPostData(req).then(postData => {
         req.body = postData
 
-        //    处理blog路由
-        const blogData = handleBlogrRouter(req, res)
-        if (blogData) {
-            res.end(JSON.stringify(blogData))
-            return
+        // //    处理blog路由
+        // const blogData = handleBlogrRouter(req, res)
+        // if (blogData) {
+        //     res.end(JSON.stringify(blogData))
+        //     return
+        // }
+
+//        通过promise处理blog路由--- blogResult是一个promise，then里面的blogData 是上一级promise return 的内容
+        const blogResult = handleBlogrRouter(req, res)
+        if (blogResult) {
+            blogResult.then(blogData => {
+                res.end(JSON.stringify(blogData))
+                return
+            })
+            return;
         }
+
 
 //    处理user路由
         const userData = handleUserRouter(req, res)
