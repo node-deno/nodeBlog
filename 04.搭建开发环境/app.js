@@ -44,8 +44,27 @@ const serverHandle = (req, res) => {
     const url = req.url
     req.path = url.split('?')[0]
 
+
     //解析query
     req.query = querystring.parse(url.split('?')[1])
+
+
+    //解析cookie
+    const cookieStr = req.headers.cookie || '' // k1=v1;k2=v2;k3=v3 cookie原本是这种样式的，使用起来不方便需要解析
+    //做解析处理
+    req.cookie = {}
+    cookieStr.split(';').forEach(arrItem => {
+        if (!arrItem) {
+            return
+        }
+        const arr = arrItem.split('=')
+        const key = arr[0].trim()  // trim()是去除空格
+        const val = arr[1].trim()
+        req.cookie[key] = val
+        console.log(req.cookie)
+    })
+    console.log('cookie', req.cookie)
+
 
     //解析postData
     getPostData(req).then(postData => {

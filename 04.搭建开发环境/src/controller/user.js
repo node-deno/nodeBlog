@@ -6,9 +6,7 @@ const login = (username, password) => {
 
     console.log(sql)
     return exec(sql).then(rows => {
-
-        console.log(rows)
-
+        //如果在数据库中没有查询到会返回一个空数组，那么rows[0]的值就是undefined
         return rows[0]
     })
 }
