@@ -6,6 +6,10 @@ const handleUserRouter = require('./src/router/user')
 const handleBlogrRouter = require('./src/router/blog')
 
 
+//session数据
+const SESSION_DATA = {}
+
+
 //处理postData---由于postData是以stream的方式传递过来的，也就是接收postData是异步接收的
 const getPostData = (req) => {
     const promise = new Promise(((resolve, reject) => {
@@ -37,6 +41,9 @@ const getPostData = (req) => {
 
 
 const serverHandle = (req, res) => {
+
+    console.log(`============${new Date()}============`)
+
 //    设置返回格式——全部设置为JSON格式
     res.setHeader('Content-Type', 'application/json')
 
@@ -61,26 +68,40 @@ const serverHandle = (req, res) => {
         const key = arr[0].trim()  // trim()是去除空格
         const val = arr[1].trim()
         req.cookie[key] = val
-        console.log(req.cookie)
+        // console.log(req.cookie) // 看看传递过来cookie的每一项
     })
-    console.log('cookie', req.cookie)
+    if (process.env.NODE_ENV == 'debug') {
+        console.log('cookie', req.cookie)
+    }
 
+    //解析session--先判断有没有userId，如果有的话看看SESSION_DATA中是否有此项，如果没有设为空对象；没有userId则随机生成任意的userId写在SESSION_DATA里
+    let needSetCookieToSession = false //是否需要给前端设置cookie——用来存储userId，然后匹配后端存储的session
+    let userId = req.cookie.userId
+    if (userId) {
+        if (!SESSION_DATA[userId]) {
+            SESSION_DATA[userId] = {}
+        }
+    } else {
+        needSetCookieToSession = true//是否需要给前端设置cookie
+        userId = `${Date.now()}_${Math.random()}`
+        SESSION_DATA[userId] = {}
+    }
+    req.session = SESSION_DATA[userId]
 
     //解析postData
     getPostData(req).then(postData => {
         req.body = postData
 
-        // //    处理blog路由
-        // const blogData = handleBlogrRouter(req, res)
-        // if (blogData) {
-        //     res.end(JSON.stringify(blogData))
-        //     return
-        // }
-
 //        通过promise处理blog路由--- blogResult是一个promise，then里面的blogData 是上一级promise return 的内容
         const blogResult = handleBlogrRouter(req, res)
         if (blogResult) {
             blogResult.then(blogData => {
+
+                //如果需要前端的cookie对应服务端的session，需要向前端返回userId
+                if (needSetCookieToSession) {
+                    res.setHeader('Set-Cookie', `userId=${userId};`)
+                }
+
                 res.end(JSON.stringify(blogData))
                 return
             })
@@ -92,6 +113,11 @@ const serverHandle = (req, res) => {
         const userData = handleUserRouter(req, res)
         if (userData) {
             userData.then(userData => {
+
+                if (needSetCookieToSession) {
+                    res.setHeader('Set-Cookie', `userId=${userId};`)
+                }
+
                 res.end(JSON.stringify(userData))
                 return
             })

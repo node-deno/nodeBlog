@@ -10,7 +10,12 @@ const getList = (author, keyword) => {
         sql += `and title like '%${keyword}%' `
     }
     sql += `order by createtime desc`
-    console.log(sql)
+
+    //如果是调试模式则输出sql语句
+    if (process.env.NODE_ENV == 'debug') {
+        console.log(sql)
+    }
+
     //返回了一个promise
     return exec(sql)
 }
@@ -18,7 +23,12 @@ const getList = (author, keyword) => {
 //查询单个博客详情信息
 const getDetail = (id) => {
     const sql = `select * from blogs where id='${id}'`
-    console.log(sql)
+
+    //如果是调试模式则输出sql语句
+    if (process.env.NODE_ENV == 'debug') {
+        console.log(sql)
+    }
+
     return exec(sql).then(rows => {
         return rows[0]  // 执行SQL返回的都是数组，但是我们查询的是单个博客详情，所以要给浏览器端返回单个博客的详情对象
     })
@@ -33,7 +43,12 @@ const newBlog = (blogData = {}) => {
     let author = blogData.author
     let createTime = Date.now()
     const sql = `insert into blogs (title, content, createTime, author) values ('${title}','${content}','${createTime}','${author}' )`
-    console.log(sql)
+
+    //如果是调试模式则输出sql语句
+    if (process.env.NODE_ENV == 'debug') {
+        console.log(sql)
+    }
+
     return exec(sql).then(insertData => {
         console.log('insertData', insertData)
         return {
@@ -49,7 +64,12 @@ const updateBlog = (blogData = {}) => {
     let content = blogData.content
     let id = blogData.id
     let sql = `update blogs set title='${title}' , content='${content}' where id=${id} `
-    console.log(sql)
+
+    //如果是调试模式则输出sql语句
+    if (process.env.NODE_ENV == 'debug') {
+        console.log(sql)
+    }
+
     return exec(sql).then(updateData => {
         console.log('updateData', updateData)
         if (updateData.affectedRows > 0) {
