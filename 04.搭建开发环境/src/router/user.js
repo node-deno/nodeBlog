@@ -27,6 +27,7 @@ const handleUserRouter = (req, res) => {
                 req.session.realname = data.realname
 
                 console.log('session', req.session)
+                // console.log('req', req)
 
                 return new SuccessModel(data)
             } else {
@@ -40,6 +41,7 @@ const handleUserRouter = (req, res) => {
     if (method === 'GET' && req.path === '/api/user/login-test') {
         //如果cookie里面没有username判定为登录失败
 
+        // console.log('req', req)
         console.log('session', req.session)
         console.log('cookie', req.cookie)
 

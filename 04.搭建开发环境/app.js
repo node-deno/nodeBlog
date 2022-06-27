@@ -6,7 +6,7 @@ const handleUserRouter = require('./src/router/user')
 const handleBlogrRouter = require('./src/router/blog')
 
 
-//session数据
+//SESSION_DATA用于存储session数据——在启动服务的时候会创建这个变量，之后所有的session数据都会放在这个对象里。（PS：1、这样无法控制session过期时间 2、如果服务重启，所有的session都会消失 3、用户多的时候会造成内存溢出）
 const SESSION_DATA = {}
 
 
