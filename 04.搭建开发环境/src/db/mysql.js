@@ -9,6 +9,12 @@ con.connect()
 
 //统一执行sql的函数
 function exec(sql) {
+
+    //如果是调试模式，每次的SQL查询语句都输出
+    if (process.env.NODE_ENV == 'debug') {
+        console.log(sql)
+    }
+
     const promise = new Promise((resolve, reject) => {
         con.query(sql, (err, result) => {
             if (err) {
@@ -18,7 +24,7 @@ function exec(sql) {
             resolve(result)
         })
     })
-    return promise
+    return promiseD
 }
 
 

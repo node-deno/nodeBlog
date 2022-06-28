@@ -13,8 +13,8 @@ const handleUserRouter = (req, res) => {
     const method = req.method
 
 //    登录接口
-    if (method === 'GET' && req.path === '/api/user/login') {
-        let {username, password} = req.query
+    if (method === 'POST' && req.path === '/api/user/login') {
+        let {username, password} = req.body
 
         return login(username, password).then(data => {
             if (data) {
