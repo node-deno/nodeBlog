@@ -18,10 +18,16 @@ const handleBlogRouter = (req, res) => {
         let author = req.query.author || ''
         let keyword = req.query.keyword || ''
 
-        // let listData = getList(author, keyword)
-        // //返回使用SuccessModel固定格式的数据
-        // return new SuccessModel(listData)
-
+        //如果前端传的query参数中包含 isadmin 那么说明要查询作者为该用户的博客列表
+        if (req.query.isadmin) {
+            let loginCheckResult = loginCheck(req)
+            if (loginCheckResult) {
+                //    未登录直接返回报错
+                return loginCheckResult
+            }
+            // 登录之后查询作者为自己的博客
+            author = req.session.username
+        }
 
         //由于与数据库交互是异步进行的，所以也要通过异步的方法调用controller提供过来的方法——return 返回本身是为了可以链式调用
         return getList(author, keyword).then(res => {

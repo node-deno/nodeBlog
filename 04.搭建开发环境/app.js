@@ -9,6 +9,9 @@ const handleBlogrRouter = require('./src/router/blog')
 //SESSION_DATA用于存储session数据——在启动服务的时候会创建这个变量，之后所有的session数据都会放在这个对象里。（PS：1、这样无法控制session过期时间 2、如果服务重启，所有的session都会消失 3、用户多的时候会造成内存溢出）
 const SESSION_DATA = {}
 
+//程序运行次数
+let runSum = 1
+
 
 //处理postData---由于postData是以stream的方式传递过来的，也就是接收postData是异步接收的
 const getPostData = (req) => {
@@ -42,7 +45,7 @@ const getPostData = (req) => {
 
 const serverHandle = (req, res) => {
 
-    console.log(`============${new Date()}============`)
+    console.log(`============${runSum++}============`)
 
 //    设置返回格式——全部设置为JSON格式
     res.setHeader('Content-Type', 'application/json')
@@ -99,7 +102,7 @@ const serverHandle = (req, res) => {
 
                 //如果需要前端的cookie对应服务端的session，需要向前端返回userId
                 if (needSetCookieToSession) {
-                    res.setHeader('Set-Cookie', `userId=${userId};`)
+                    res.setHeader('Set-Cookie', `userId=${userId};path=/;httpOnly;`)
                 }
 
                 res.end(JSON.stringify(blogData))
@@ -115,8 +118,9 @@ const serverHandle = (req, res) => {
             userResult.then(userData => {
 
                 if (needSetCookieToSession) {
-                    res.setHeader('Set-Cookie', `userId=${userId};`)
+                    res.setHeader('Set-Cookie', `userId=${userId};path=/;httpOnly;`)
                 }
+                console.log(SESSION_DATA)
                 console.log('userData', JSON.stringify(userData))
 
                 res.end(JSON.stringify(userData))
