@@ -24,7 +24,7 @@ function exec(sql) {
             resolve(result)
         })
     })
-    return promiseD
+    return promise
 }
 
 

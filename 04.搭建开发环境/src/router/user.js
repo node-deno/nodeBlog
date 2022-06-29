@@ -27,7 +27,7 @@ const handleUserRouter = (req, res) => {
                 req.session.realname = data.realname
 
                 console.log('session', req.session)
-                // console.log('req', req)
+                console.log('data', data)
 
                 return new SuccessModel(data)
             } else {

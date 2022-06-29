@@ -45,6 +45,25 @@ const handleBlogRouter = (req, res) => {
         })
     }
 
+    //    删除一篇博客
+    if (method === 'POST' && req.path === '/api/blog/del') {
+
+        let loginCheckResult = loginCheck(req)
+        if (loginCheckResult) {
+            //未登录
+            return loginCheckResult
+        }
+        req.body.author = req.session.username
+
+        return deleteBlog(req.body).then(res => {
+            if (res) {
+                return new SuccessModel('删除博客成功')
+            } else {
+                return new ErrorModel()
+            }
+        })
+    }
+
 //    新建一篇博客
     if (method === 'POST' && req.path === '/api/blog/new') {
 
@@ -68,6 +87,8 @@ const handleBlogRouter = (req, res) => {
 //    更新一篇博客
     if (method === 'POST' && req.path === '/api/blog/update') {
 
+        req.body.id = req.query.id
+
         return updateBlog(req.body).then(res => {
             if (res) {
                 return new SuccessModel('更新博客成功')
@@ -77,24 +98,6 @@ const handleBlogRouter = (req, res) => {
         })
     }
 
-//    删除一篇博客
-    if (method === 'POST' && req.path === '/api/blog/delete') {
-
-        let loginCheckResult = loginCheck(req)
-        if (loginCheckResult) {
-            //未登录
-            return loginCheckResult
-        }
-        req.body.author = req.session.username
-
-        return deleteBlog(req.body).then(res => {
-            if (res) {
-                return new SuccessModel('删除博客成功')
-            } else {
-                return new ErrorModel()
-            }
-        })
-    }
 }
 
 module.exports = handleBlogRouter

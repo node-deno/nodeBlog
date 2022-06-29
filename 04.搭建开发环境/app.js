@@ -110,13 +110,14 @@ const serverHandle = (req, res) => {
 
 
 //    通过promise处理user路由
-        const userData = handleUserRouter(req, res)
-        if (userData) {
-            userData.then(userData => {
+        const userResult = handleUserRouter(req, res)
+        if (userResult) {
+            userResult.then(userData => {
 
                 if (needSetCookieToSession) {
                     res.setHeader('Set-Cookie', `userId=${userId};`)
                 }
+                console.log('userData', JSON.stringify(userData))
 
                 res.end(JSON.stringify(userData))
                 return
