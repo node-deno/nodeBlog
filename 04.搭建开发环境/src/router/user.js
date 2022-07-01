@@ -26,9 +26,6 @@ const handleUserRouter = (req, res) => {
                 req.session.username = data.username
                 req.session.realname = data.realname
 
-                console.log('session', req.session)
-                console.log('data', data)
-
                 return new SuccessModel(data)
             } else {
                 return new ErrorModel('登录失败')
@@ -37,19 +34,19 @@ const handleUserRouter = (req, res) => {
     }
 
 
-// //    登录验证的测试接口---由于现在接口都是使用promise异步的方式，所以这里也需要使用promise进行修饰
-//     if (method === 'GET' && req.path === '/api/user/login-test') {
-//         //如果cookie里面没有username判定为登录失败
-//
-//         // console.log('req', req)
-//         console.log('session', req.session)
-//         console.log('cookie', req.cookie)
-//
-//         if (req.session.username) {
-//             return Promise.resolve(new SuccessModel({username: req.session.username}))
-//         }
-//         return Promise.resolve(new ErrorModel('登录失败'))
-//     }
+//    登录验证的测试接口---由于现在接口都是使用promise异步的方式，所以这里也需要使用promise进行修饰
+    if (method === 'GET' && req.path === '/api/user/login-test') {
+        //如果cookie里面没有username判定为登录失败
+
+        // console.log('req', req)
+        console.log('session', req.session)
+        console.log('cookie', req.cookie)
+
+        if (req.session.username) {
+            return Promise.resolve(new SuccessModel({username: req.session.username}))
+        }
+        return Promise.resolve(new ErrorModel('登录失败'))
+    }
 }
 
 module.exports = handleUserRouter

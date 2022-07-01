@@ -60,6 +60,7 @@ const handleBlogRouter = (req, res) => {
             return loginCheckResult
         }
         req.body.author = req.session.username
+        req.body.id = req.query.id
 
         return deleteBlog(req.body).then(res => {
             if (res) {

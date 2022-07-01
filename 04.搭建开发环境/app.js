@@ -121,7 +121,6 @@ const serverHandle = (req, res) => {
                     res.setHeader('Set-Cookie', `userId=${userId};path=/;httpOnly;`)
                 }
                 console.log(SESSION_DATA)
-                console.log('userData', JSON.stringify(userData))
 
                 res.end(JSON.stringify(userData))
                 return
