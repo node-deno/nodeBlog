@@ -2,6 +2,7 @@
 // process.stdin.pipe(process.stdout)   //输入的内容nodejs会帮你输出出来
 // pipe----相当于一个管道，是nodejs的一个全局方法，在任何位置都可以使用
 
+//流式网络IO操作
 const http = require('http')
 const server = http.createServer((req, res) => {
     if (req.method === 'POST') {

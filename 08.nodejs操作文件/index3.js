@@ -1,3 +1,4 @@
+//流式复制文件
 const fs = require('fs')
 const path = require('path')
 

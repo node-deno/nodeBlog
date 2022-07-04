@@ -1,3 +1,4 @@
+//简单方式操作文件
 const fs = require('fs')
 const path = require('path') //主要用于处理不同系统中不同的路径方式
 
@@ -27,6 +28,6 @@ let fileName = path.resolve(__dirname, 'test.txt')
 
 
 //判断文件是否存在(异步)
-fs.exists(fileName+'1', (exist) => {
+fs.exists(fileName + '1', (exist) => {
     console.log('exist', exist) // 如果文件存在返回true，反之 false
 })
