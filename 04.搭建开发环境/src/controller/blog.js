@@ -1,5 +1,8 @@
 const {exec} = require('../db/mysql')
 
+
+const xss = require('xss')
+
 //在编写SQL的时候一定要注意空格，防止SQL语句在拼接之后不能正常使用
 const getList = (author, keyword) => {
     let sql = `select * from blogs where 1=1 ` //写入 1=1 是为了防止author和keyword没有值，但是还有where会报错，加上 1=1 是SQL语法错误
@@ -28,7 +31,7 @@ const getDetail = (id) => {
 const newBlog = (blogData = {}) => {
 //    blogData 是一个博客对象，包含 title content 属性
     console.log('newBlog blogData', blogData)
-    let title = blogData.title
+    let title = xss(blogData.title)
     let content = blogData.content
     let author = blogData.author
     let createTime = Date.now()

@@ -5,6 +5,9 @@ const querystring = require('querystring')
 const handleUserRouter = require('./src/router/user')
 const handleBlogrRouter = require('./src/router/blog')
 
+//引入写日志模块
+const {access} = require('./src/utils/log')
+
 
 //SESSION_DATA用于存储session数据——在启动服务的时候会创建这个变量，之后所有的session数据都会放在这个对象里。（PS：1、这样无法控制session过期时间 2、如果服务重启，所有的session都会消失 3、用户多的时候会造成内存溢出）
 const SESSION_DATA = {}
@@ -44,6 +47,10 @@ const getPostData = (req) => {
 
 
 const serverHandle = (req, res) => {
+
+    //记录访问日志
+    access(`${req.method} -- ${req.url} -- ${req.headers['user-agent']} -- ${Date.now()}`)
+
 
     console.log(`============${runSum++}============`)
 
@@ -91,10 +98,9 @@ const serverHandle = (req, res) => {
     }
     req.session = SESSION_DATA[userId]
 
-    //解析postData
+
     getPostData(req).then(postData => {
         req.body = postData
-
 //        通过promise处理blog路由--- blogResult是一个promise，then里面的blogData 是上一级promise return 的内容
         const blogResult = handleBlogrRouter(req, res)
         if (blogResult) {
@@ -102,7 +108,7 @@ const serverHandle = (req, res) => {
 
                 //如果需要前端的cookie对应服务端的session，需要向前端返回userId
                 if (needSetCookieToSession) {
-                    res.setHeader('Set-Cookie', `userId=${userId};path=/;httpOnly;`)
+                    res.setHeader('Set-Cookie', `userId=${userId};path=/;`)
                 }
 
                 res.end(JSON.stringify(blogData))
@@ -118,7 +124,7 @@ const serverHandle = (req, res) => {
             userResult.then(userData => {
 
                 if (needSetCookieToSession) {
-                    res.setHeader('Set-Cookie', `userId=${userId};path=/;httpOnly;`)
+                    res.setHeader('Set-Cookie', `userId=${userId};path=/;`)
                 }
                 console.log(SESSION_DATA)
 
