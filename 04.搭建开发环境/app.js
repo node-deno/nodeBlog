@@ -75,7 +75,7 @@ const serverHandle = (req, res) => {
             return
         }
         const arr = arrItem.split('=')
-        const key = arr[0].trim()  // trim()是去除空格
+        const key = arr[0].trim()  // trim()去除两端的空格
         const val = arr[1].trim()
         req.cookie[key] = val
         // console.log(req.cookie) // 看看传递过来cookie的每一项
@@ -83,6 +83,7 @@ const serverHandle = (req, res) => {
     if (process.env.NODE_ENV == 'debug') {
         console.log('cookie', req.cookie)
     }
+
 
     //解析session--先判断有没有userId，如果有的话看看SESSION_DATA中是否有此项，如果没有设为空对象；没有userId则随机生成任意的userId写在SESSION_DATA里
     let needSetCookieToSession = false //是否需要给前端设置cookie——用来存储userId，然后匹配后端存储的session
