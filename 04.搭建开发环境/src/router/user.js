@@ -19,9 +19,6 @@ const handleUserRouter = (req, res) => {
         return login(username, password).then(data => {
             if (data) {
 
-                // //操作cookie--返回给客户端
-                // res.setHeader('Set-Cookie', `username=${data.username};httpOnly;expires=${getCookieExpires()}`)
-
                 //设置session
                 req.session.username = data.username
                 req.session.realname = data.realname
