@@ -10,6 +10,8 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 //express-session可以让更便捷的使用session
 let session = require('express-session')
+//引入连接redis中间件---将session放在connect-redis中间件中
+let RedisStore = require('connect-redis')(session)
 
 
 //引入路由
@@ -37,6 +39,13 @@ app.use(cookieParser());
 //express开放静态文件访问服务，使public文件夹中的文件可以被访问
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+//引入redis服务，然后创建sessionStore
+let redisClient = require('./db/redis')
+const sessionStore = new RedisStore({
+    client: redisClient
+})
+
 /*
 使用session中间件
 1、使用该中间件之后会给首次访问服务的浏览器创建一个cookie，使得cookie与服务端变量里存储的session进行对应
@@ -49,7 +58,9 @@ app.use(session({
             // path: '/', //默认配置
             // httpOnly: true, //默认配置
             maxAge: 24 * 60 * 60 * 1000 //设置cookie的最大时间。与expires作用相同，但是设置的格式不太一样
-        }
+        },
+        //在express-session中间件中，设置 store 为sessionStore 就可以将session存储在redis中
+        store: sessionStore
     }
 ))
 
