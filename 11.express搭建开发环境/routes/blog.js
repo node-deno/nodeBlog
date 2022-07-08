@@ -37,6 +37,30 @@ router.get('/detail', function (req, res, next) {
 })
 
 //新建一篇博客
+router.post('/new', loginCheck, (req, res, next) => {
+    req.body.author = req.session.username
+    newBlog(req.body).then(data => {
+        res.json(new SuccessModel(data))
+    })
+})
 
+//更新一篇博客
+router.post('/update', loginCheck, (req, res, next) => {
+    req.body.id = req.query.id
+    updateBlog(req.body).then(data => {
+        if (data) res.json(new SuccessModel('更新成功'))
+        else res.json(new ErrorModel('更新失败'))
+    })
+})
+
+//删除一篇博客
+router.post('/del', loginCheck, (req, res, next) => {
+    req.body.id = req.query.id
+    req.body.author = req.session.username
+    deleteBlog(req.body).then(data => {
+        if (data) res.json(new SuccessModel('删除成功'))
+        else res.json(new ErrorModel('删除失败'))
+    })
+})
 
 module.exports = router
