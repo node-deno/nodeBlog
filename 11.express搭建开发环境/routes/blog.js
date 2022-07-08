@@ -15,7 +15,9 @@ router.get('/list', function (req, res, next) {
 
     //如果前端传的query参数中包含 isadmin 那么说明要查询作者为该用户的博客列表
     if (req.query.isadmin) {
+        console.log('管理员界面')
         if (req.session.username == null) {
+            console.error('管理员界面，但是没有登录')
             res.json(new ErrorModel('未登录'))
             return
         }

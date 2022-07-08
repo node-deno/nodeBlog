@@ -5,7 +5,8 @@
   "scripts": {
     "start": "node ./bin/www",
     "dev": "cross-env NODE_ENV=dev PORT=8000 nodemon node ./bin/www",
-    "debug": "cross-env NODE_ENV=debug PORT=8000 nodemon node ./bin/www"
+    "debug": "cross-env NODE_ENV=debug PORT=8000 nodemon node ./bin/www",
+    "product": "cross-env NODE_ENV=product PORT=8000 nodemon node ./bin/www"
   },
   "dependencies": {
     "connect-redis": "^6.1.3",

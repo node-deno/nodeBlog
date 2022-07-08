@@ -12,6 +12,8 @@ var logger = require('morgan');
 let session = require('express-session')
 //引入连接redis中间件---将session放在connect-redis中间件中
 let RedisStore = require('connect-redis')(session)
+//引入文件模块
+let fs = require('fs')
 
 
 //引入路由
@@ -24,8 +26,21 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
+
+if (process.env.NODE_ENV == 'dev') {
+//    开发环境
 //记录日志中间件
-app.use(logger('dev'));
+    app.use(logger('dev'));
+} else {
+    // 生产环境
+    let writeStream = fs.createWriteStream('./logs/access.log', {
+        flags: 'a'  //对文件操作是  新增
+    })
+    app.use(logger('combined', {
+        stream: writeStream
+    }));
+}
+
 
 //获取JSON格式的post data 中间件，将获取到的数据都放在 【req.body】
 app.use(express.json());
