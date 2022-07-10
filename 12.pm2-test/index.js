@@ -4,6 +4,7 @@ let server = http.createServer((req, res) => {
 
     //模拟日志
     console.log('我是模拟日志信息', Date.now())
+    console.info('我是模拟info日志')
     //模拟错误
     console.error('我是模拟日志错误', Date.now())
 
